@@ -6,7 +6,7 @@ How To Use?
 
 Click on any user and select Attach Util, from there there you can toggle each button for various attachments. If you want to stop being attached to them press either Space on your keyboard or your Right Controller Menu Button for VR users(sorry lefties)
 
-https://github.com/ImStellar/AttachToPlayer/blob/master/AttachExample.png?raw=true
+![](https://github.com/ImStellar/AttachToPlayer/blob/master/AttachExample.png?raw=true)
 
 Bugs
 
