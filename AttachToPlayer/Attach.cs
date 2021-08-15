@@ -54,6 +54,8 @@ namespace AttachToPlayer
                 {
                     PlayerExtensions.FreezeLocalPlayer(true);
                     Target = null;
+                    AbreastAttachment = false;
+                    CircularAttachment = false;
                 }
             if (Target != null && PlayerExtensions.LocalVRCPlayer != null && !AbreastAttachment && !CircularAttachment)
             {
@@ -74,7 +76,7 @@ namespace AttachToPlayer
         public static bool AbreastAttachment;
         public static bool CircularAttachment;
         public static float outset = 0f;
-        public static float circularspeed = 5f;
+        public static float circularspeed = 2f;
         public static float PosX;
         public static float PosY;
         public static float PosZ;
