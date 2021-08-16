@@ -10,7 +10,7 @@ namespace AttachToPlayer
 {
     internal static class PlayerExtensions
     {
-        // These extensions were made by Love, Day, and probaby a few other coders credits to them
+        // These extensions were made by Love, Day, me, and probaby a few other coders credits to them
         public static VRCPlayer LocalVRCPlayer
         {
             get
