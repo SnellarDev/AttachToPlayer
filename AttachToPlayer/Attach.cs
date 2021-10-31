@@ -9,7 +9,7 @@ namespace AttachToPlayer
     {
         public override void OnApplicationStart()
         {
-            MelonLogger.Msg("Press Space to stop attaching or your right controller menu button if you are in VR(sorry lefties). This was made by Stellar#1000");
+            MelonLogger.Msg("Press Space to stop attaching or your right controller menu button if you are in VR(sorry lefties). This was made by Stellar");
             InitOnPlayerJoinLeavePatch();
             AttachUI.WhereDaUI().Start();
         }
@@ -83,7 +83,7 @@ namespace AttachToPlayer
         public static int BodyX;
         public static int BodyY;
         public static int BodyZ;
-        private KeyCode[] keycodes = new KeyCode[] { KeyCode.Space, KeyCode.JoystickButton0 };
+        private KeyCode[] keycodes = new KeyCode[] { KeyCode.Space, KeyCode.JoystickButton15 };
         public HumanBodyBones[] boneparts = new HumanBodyBones[] { HumanBodyBones.Head, HumanBodyBones.Chest, HumanBodyBones.LeftHand, HumanBodyBones.RightHand, HumanBodyBones.Hips, HumanBodyBones.LeftLowerLeg, HumanBodyBones.RightLowerLeg, HumanBodyBones.RightLowerArm, HumanBodyBones.LeftLowerArm, HumanBodyBones.LeftToes, HumanBodyBones.RightToes, HumanBodyBones.Spine };
     }
 }

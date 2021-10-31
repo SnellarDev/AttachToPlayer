@@ -16,7 +16,7 @@ namespace AttachToPlayer
             return new HarmonyMethod(YourClass.GetMethod(MethodName, stat | pub));
         }
 
-        private static readonly HarmonyInstance HInstance = HarmonyInstance.Create("StarlightPatches");
+        private static readonly HarmonyInstance HInstance = HarmonyInstance.Create("Patches");
 
         internal static Type GetPatch(string v)
         {
