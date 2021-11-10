@@ -22,6 +22,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
@@ -33,15 +36,45 @@
   <ItemGroup>
     <Compile Include="Attach.cs" />
     <Compile Include="AttachUI.cs" />
+    <Compile Include="Requi\ConfigValue.cs" />
+    <Compile Include="Requi\Managers\ConfigManager.cs" />
+    <Compile Include="Requi\Managers\ResourceManager.cs" />
+    <Compile Include="Requi\Managers\UiManager.cs" />
     <Compile Include="Misc.cs" />
+    <Compile Include="Requi\ModComponent.cs" />
     <Compile Include="Patch.cs" />
     <Compile Include="PlayerExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RubyButtonAPI.cs" />
+    <Compile Include="Requi\UI\IButtonPage.cs" />
+    <Compile Include="Requi\UI\ReAvatarList.cs" />
+    <Compile Include="Requi\UI\ReCategoryPage.cs" />
+    <Compile Include="Requi\UI\ReMenuButton.cs" />
+    <Compile Include="Requi\UI\ReMenuCategory.cs" />
+    <Compile Include="Requi\UI\ReMenuPage.cs" />
+    <Compile Include="Requi\UI\ReMenuToggle.cs" />
+    <Compile Include="Requi\UI\ReTabButton.cs" />
+    <Compile Include="Requi\UI\ReUiButton.cs" />
+    <Compile Include="Requi\UI\ReUiText.cs" />
+    <Compile Include="Requi\UI\ReWingMenu.cs" />
+    <Compile Include="Requi\UI\UiElement.cs" />
+    <Compile Include="Requi\Unity\ColorExtensions.cs" />
+    <Compile Include="Requi\Unity\EnableDisableListener.cs" />
+    <Compile Include="Requi\Unity\RenderObjectListener.cs" />
+    <Compile Include="Requi\Unity\UnityExtensions.cs" />
+    <Compile Include="Requi\VRChat\PlayerExtensions.cs" />
+    <Compile Include="Requi\VRChat\PopupManagerExtensions.cs" />
+    <Compile Include="Requi\VRChat\QuickMenuEx.cs" />
+    <Compile Include="Requi\VRChat\VRCConfig.cs" />
+    <Compile Include="Requi\VRChat\VrcUiExtensions.cs" />
+    <Compile Include="Requi\VRChat\VRCUiManagerEx.cs" />
+    <Compile Include="Requi\XrefUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\VRChat\MelonLoader\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="DataModel">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\VRChat\MelonLoader\Managed\DataModel.dll</HintPath>
     </Reference>
     <Reference Include="Il2Cppmscorlib">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\VRChat\MelonLoader\Managed\Il2Cppmscorlib.dll</HintPath>
@@ -128,6 +161,7 @@
     <Reference Include="Photon-DotNet">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\VRChat\MelonLoader\Managed\Photon-DotNet.dll</HintPath>
     </Reference>
+    <Reference Include="System" />
     <Reference Include="UnhollowerBaseLib">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\VRChat\MelonLoader\Managed\UnhollowerBaseLib.dll</HintPath>
     </Reference>
@@ -382,6 +416,18 @@
     </Reference>
     <Reference Include="VRC.Udon.Wrapper">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\VRChat\MelonLoader\Managed\VRC.Udon.Wrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="VRC.UI.Core">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\VRChat\MelonLoader\Managed\VRC.UI.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="VRC.UI.Elements">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\VRChat\MelonLoader\Managed\VRC.UI.Elements.dll</HintPath>
+    </Reference>
+    <Reference Include="VRC.UI.Shared">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\VRChat\MelonLoader\Managed\VRC.UI.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="VRC.Utility">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\VRChat\MelonLoader\Managed\VRC.Utility.dll</HintPath>
     </Reference>
     <Reference Include="VRCCore-Editor">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\VRChat\MelonLoader\Managed\VRCCore-Editor.dll</HintPath>

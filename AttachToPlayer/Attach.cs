@@ -1,19 +1,22 @@
 ﻿using MelonLoader;
 using System.Linq;
 using System.Reflection;
+using UnhollowerRuntimeLib.XrefScans;
 using UnityEngine;
+using VRC.DataModel;
+using VRC.UI.Elements.Menus;
 
 namespace AttachToPlayer
 {
     public class Attach : MelonMod
     {
+        public static VRC.Player cachedselected;
         public override void OnApplicationStart()
         {
             MelonLogger.Msg("Press Space to stop attaching or your right controller menu button if you are in VR(sorry lefties). This was made by Stellar");
             InitOnPlayerJoinLeavePatch();
             AttachUI.WhereDaUI().Start();
         }
-
         public static void InitOnPlayerJoinLeavePatch()
         {
             try
@@ -31,16 +34,13 @@ namespace AttachToPlayer
         {
             try
             {
-                if (Target.GetAPIUser().id != null)
-                {
-                    if (Target.GetAPIUser().id == __0.GetAPIUser().id)
-                    {
-                        Target = null;
-                        AbreastAttachment = false;
-                        CircularAttachment = false;
-                        PlayerExtensions.FreezeLocalPlayer(true);
-                    }
-                }
+             if (Target.GetAPIUser().id == __0.GetAPIUser().id)
+             {
+                 Target = null;
+                 AbreastAttachment = false;
+                 CircularAttachment = false;
+                 PlayerExtensions.FreezeLocalPlayer(true);
+             }
             }
             catch
             {
@@ -50,6 +50,14 @@ namespace AttachToPlayer
 
         public override void OnUpdate()
         {
+            try
+            {
+                if (AttachUI.GetSelectedPlayer() != null)
+                {
+                    cachedselected = AttachUI.GetSelectedPlayer();
+                }
+            }
+            catch { }
             for (int i = 0; i < keycodes.Length; i++) if (Target != null && Input.GetKeyDown(keycodes[i]))
                 {
                     PlayerExtensions.FreezeLocalPlayer(true);

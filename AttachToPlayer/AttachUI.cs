@@ -1,21 +1,34 @@
 ﻿using MelonLoader;
-using RubyButtonAPI;
 using System.Collections;
 using UnityEngine;
 using VRC;
 using VRC.Core;
+using ReMod;
+using ReMod.Core.Managers;
+using ReMod.Core.UI;
+using System;
+using System.Threading;
+using ReMod.Core.VRChat;
+using VRC.UI.Elements.Menus;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace AttachToPlayer
 {
-    internal class AttachUI
+    public static class AttachUI
     {
+        public static bool ison;
+        private static UiManager uiManager;
+        public static Sprite sprith;
         public static void AttachGUI()
         {
-            Object.Destroy(GameObject.Find("UserInterface/QuickMenu/UserInteractMenu/ReportAbuseButton"));
-            TargetNest = new QMNestedButton("UserInteractMenu", 4, 1, "Attach Utils", "Opens a sub-menu for attaching to players", Color.cyan, Color.cyan, null, null);
-            AttachToPlayer = new QMSingleButton(TargetNest, 1, 0, "Attach To Player", delegate
+            GameObject.Find("UserInterface/Canvas_QuickMenu(Clone)/Container/Window/Toggle_SafeMode").gameObject.SetActive(false);
+            uiManager = new UiManager("Target");
+            uiManager.TargetMenu.AddMenuPage("Utils", "Opens a sub-menu for attaching to players");
+            ReMenuPage page = uiManager.TargetMenu.GetMenuPage("Utils");
+            page.AddButton("Attach To Player", "Attaches your player to the other player's head", delegate
             {
-                Player playercheck = GetSelectedPlayer();
+                Player playercheck = Attach.cachedselected;
                 if (playercheck.GetVRCPlayer().GetAnimator().isHuman)
                 {
                     if (Attach.Target != null)
@@ -27,15 +40,16 @@ namespace AttachToPlayer
                     Attach.BodyX = 0;
                     Attach.BodyY = 0;
                     Attach.BodyZ = 0;
-                    Attach.Target = GetSelectedPlayer();
+                    Attach.Target = Attach.cachedselected;
                     PlayerExtensions.FreezeLocalPlayer(false);
                 }
                 MelonLogger.Msg("the player is not able to be attached to");
-            }, "Attaches your player to the other player's head", Color.cyan, Color.cyan);
-            AttachToBone = new QMNestedButton(TargetNest, 2, 0, "Bone Attach", "Select the player's bones to attach to", Color.cyan, Color.cyan, null, null);
-            AttachToChest = new QMSingleButton(AttachToBone, 1, 0, "Chest", delegate
+            });
+            page.AddMenuPage("Bone Attach", "Select the player's bones to attach to");
+            ReMenuPage bonepage = page.GetMenuPage("Bone Attach");
+            bonepage.AddButton("Chest", "Attaches your player to the other player's chest", delegate
             {
-                Player playercheck = GetSelectedPlayer();
+                Player playercheck = Attach.cachedselected;
                 if (playercheck.GetVRCPlayer().GetAnimator().isHuman)
                 {
                     if (Attach.Target != null)
@@ -47,14 +61,14 @@ namespace AttachToPlayer
                     Attach.BodyX = 1;
                     Attach.BodyY = 1;
                     Attach.BodyZ = 1;
-                    Attach.Target = GetSelectedPlayer();
+                    Attach.Target = Attach.cachedselected;
                     PlayerExtensions.FreezeLocalPlayer(false);
                 }
                 MelonLogger.Msg("the player is not able to be attached to");
-            }, "Attach to the chest of the player", Color.cyan, Color.cyan);
-            AttachToRightHand = new QMSingleButton(AttachToBone, 2, 0, "Right Hand", delegate
+            });
+            bonepage.AddButton("Right Hand", "Attach to the right hand of the player", delegate
             {
-                Player playercheck = GetSelectedPlayer();
+                Player playercheck = Attach.cachedselected;
                 if (playercheck.GetVRCPlayer().GetAnimator().isHuman)
                 {
                     if (Attach.Target != null)
@@ -66,14 +80,14 @@ namespace AttachToPlayer
                     Attach.BodyX = 2;
                     Attach.BodyY = 2;
                     Attach.BodyZ = 2;
-                    Attach.Target = GetSelectedPlayer();
+                    Attach.Target = Attach.cachedselected;
                     PlayerExtensions.FreezeLocalPlayer(false);
                 }
                 MelonLogger.Msg("the player is not able to be attached to");
-            }, "Attach to the right hand of the player", Color.cyan, Color.cyan);
-            AttachToLeftHand = new QMSingleButton(AttachToBone, 3, 0, "Left Hand", delegate
+            });
+            bonepage.AddButton("Left Hand", "Attach to the left hand of the player", delegate
             {
-                Player playercheck = GetSelectedPlayer();
+                Player playercheck = Attach.cachedselected;
                 if (playercheck.GetVRCPlayer().GetAnimator().isHuman)
                 {
                     if (Attach.Target != null)
@@ -85,14 +99,15 @@ namespace AttachToPlayer
                     Attach.BodyX = 3;
                     Attach.BodyY = 3;
                     Attach.BodyZ = 3;
-                    Attach.Target = GetSelectedPlayer();
+                    Attach.Target = Attach.cachedselected;
                     PlayerExtensions.FreezeLocalPlayer(false);
                 }
                 MelonLogger.Msg("the player is not able to be attached to");
-            }, "Attach to the left hand of the player", Color.cyan, Color.cyan);
-            AttachToHips = new QMSingleButton(AttachToBone, 4, 0, "Hips", delegate
+            });
+
+            bonepage.AddButton("Hips", "Attach to the hips of the player", delegate
             {
-                Player playercheck = GetSelectedPlayer();
+                Player playercheck = Attach.cachedselected;
                 if (playercheck.GetVRCPlayer().GetAnimator().isHuman)
                 {
                     if (Attach.Target != null)
@@ -104,14 +119,14 @@ namespace AttachToPlayer
                     Attach.BodyX = 4;
                     Attach.BodyY = 4;
                     Attach.BodyZ = 4;
-                    Attach.Target = GetSelectedPlayer();
+                    Attach.Target = Attach.cachedselected;
                     PlayerExtensions.FreezeLocalPlayer(false);
                 }
                 MelonLogger.Msg("the player is not able to be attached to");
-            }, "Attach to the hip of the player", Color.cyan, Color.cyan);
-            AttachToLeftLeg = new QMSingleButton(AttachToBone, 1, 1, "Left Leg", delegate
+            });
+            bonepage.AddButton("Left Leg", "Attach to the left leg of the player", delegate
             {
-                Player playercheck = GetSelectedPlayer();
+                Player playercheck = Attach.cachedselected;
                 if (playercheck.GetVRCPlayer().GetAnimator().isHuman)
                 {
                     if (Attach.Target != null)
@@ -123,14 +138,14 @@ namespace AttachToPlayer
                     Attach.BodyX = 5;
                     Attach.BodyY = 5;
                     Attach.BodyZ = 5;
-                    Attach.Target = GetSelectedPlayer();
+                    Attach.Target = Attach.cachedselected;
                     PlayerExtensions.FreezeLocalPlayer(false);
                 }
                 MelonLogger.Msg("the player is not able to be attached to");
-            }, "Attach to the left leg of the player", Color.cyan, Color.cyan);
-            AttachToRightLeg = new QMSingleButton(AttachToBone, 2, 1, "Right Leg", delegate
+            });
+            bonepage.AddButton("Right Leg", "Attach to the right leg of the player", delegate
             {
-                Player playercheck = GetSelectedPlayer();
+                Player playercheck = Attach.cachedselected;
                 if (playercheck.GetVRCPlayer().GetAnimator().isHuman)
                 {
                     if (Attach.Target != null)
@@ -142,14 +157,14 @@ namespace AttachToPlayer
                     Attach.BodyX = 6;
                     Attach.BodyY = 6;
                     Attach.BodyZ = 6;
-                    Attach.Target = GetSelectedPlayer();
+                    Attach.Target = Attach.cachedselected;
                     PlayerExtensions.FreezeLocalPlayer(false);
                 }
                 MelonLogger.Msg("the player is not able to be attached to");
-            }, "Attach to the right leg of the player", Color.cyan, Color.cyan);
-            AttachToRightArm = new QMSingleButton(AttachToBone, 3, 1, "Right Arm", delegate
+            });
+            bonepage.AddButton("Right Arm", "Attach to the right arm of the player", delegate
             {
-                Player playercheck = GetSelectedPlayer();
+                Player playercheck = Attach.cachedselected;
                 if (playercheck.GetVRCPlayer().GetAnimator().isHuman)
                 {
                     if (Attach.Target != null)
@@ -161,14 +176,14 @@ namespace AttachToPlayer
                     Attach.BodyX = 7;
                     Attach.BodyY = 7;
                     Attach.BodyZ = 7;
-                    Attach.Target = GetSelectedPlayer();
+                    Attach.Target = Attach.cachedselected;
                     PlayerExtensions.FreezeLocalPlayer(false);
                 }
                 MelonLogger.Msg("the player is not able to be attached to");
-            }, "Attach to the right arm of the player", Color.cyan, Color.cyan);
-            AttachToLeftArm = new QMSingleButton(AttachToBone, 4, 1, "Left Arm", delegate
+            });
+            bonepage.AddButton("Left Arm", "Attach to the left arm of the player", delegate
             {
-                Player playercheck = GetSelectedPlayer();
+                Player playercheck = Attach.cachedselected;
                 if (playercheck.GetVRCPlayer().GetAnimator().isHuman)
                 {
                     if (Attach.Target != null)
@@ -180,14 +195,14 @@ namespace AttachToPlayer
                     Attach.BodyX = 8;
                     Attach.BodyY = 8;
                     Attach.BodyZ = 8;
-                    Attach.Target = GetSelectedPlayer();
+                    Attach.Target = Attach.cachedselected;
                     PlayerExtensions.FreezeLocalPlayer(false);
                 }
                 MelonLogger.Msg("the player is not able to be attached to");
-            }, "Attach to the left arm of the player", Color.cyan, Color.cyan);
-            AttachToLeftSide = new QMSingleButton(AttachToBone, 1, 2, "Left Side", delegate
+            });
+            bonepage.AddButton("Left Side", "Attach to the left side of the player", delegate
             {
-                Player playercheck = GetSelectedPlayer();
+                Player playercheck = Attach.cachedselected;
                 if (playercheck.GetVRCPlayer().GetAnimator().isHuman)
                 {
                     if (Attach.Target != null)
@@ -195,21 +210,20 @@ namespace AttachToPlayer
                         Attach.Target = null;
                         Attach.CircularAttachment = false;
                     }
-                    Attach.AbreastAttachment = true;
                     Attach.BodyX = 9;
                     Attach.BodyY = 9;
                     Attach.BodyZ = 9;
                     Attach.PosX = .5f;
                     Attach.PosY = 0f;
                     Attach.PosZ = 0f;
-                    Attach.Target = GetSelectedPlayer();
+                    Attach.Target = Attach.cachedselected;
                     PlayerExtensions.FreezeLocalPlayer(false);
                 }
                 MelonLogger.Msg("the player is not able to be attached to");
-            }, "Attach to an offsetted side of the player", Color.cyan, Color.cyan);
-            AttachToRightSide = new QMSingleButton(AttachToBone, 2, 2, "Right Side", delegate
+            });
+            bonepage.AddButton("Right Side", "Attach to the right side of the player", delegate
             {
-                Player playercheck = GetSelectedPlayer();
+                Player playercheck = Attach.cachedselected;
                 if (playercheck.GetVRCPlayer().GetAnimator().isHuman)
                 {
                     if (Attach.Target != null)
@@ -217,21 +231,20 @@ namespace AttachToPlayer
                         Attach.Target = null;
                         Attach.CircularAttachment = false;
                     }
-                    Attach.AbreastAttachment = true;
                     Attach.BodyX = 10;
                     Attach.BodyY = 10;
                     Attach.BodyZ = 10;
                     Attach.PosX = -.5f;
                     Attach.PosY = 0f;
                     Attach.PosZ = 0f;
-                    Attach.Target = GetSelectedPlayer();
+                    Attach.Target = Attach.cachedselected;
                     PlayerExtensions.FreezeLocalPlayer(false);
                 }
                 MelonLogger.Msg("the player is not able to be attached to");
-            }, "Attach to an offsetted side of the player", Color.cyan, Color.cyan);
-            AttachToBelow = new QMSingleButton(AttachToBone, 3, 2, "Below", delegate
+            });
+            bonepage.AddButton("Below", "Attach below the player", delegate
             {
-                Player playercheck = GetSelectedPlayer();
+                Player playercheck = Attach.cachedselected;
                 if (playercheck.GetVRCPlayer().GetAnimator().isHuman)
                 {
                     if (Attach.Target != null)
@@ -239,21 +252,21 @@ namespace AttachToPlayer
                         Attach.Target = null;
                         Attach.CircularAttachment = false;
                     }
-                    Attach.AbreastAttachment = true;
                     Attach.BodyX = 11;
                     Attach.BodyY = 11;
                     Attach.BodyZ = 11;
                     Attach.PosX = 0f;
                     Attach.PosY = -2f;
                     Attach.PosZ = 0f;
-                    Attach.Target = GetSelectedPlayer();
+                    Attach.Target = Attach.cachedselected;
                     PlayerExtensions.FreezeLocalPlayer(false);
                 }
                 MelonLogger.Msg("the player is not able to be attached to");
-            }, "Attach to a pivot below the player", Color.cyan, Color.cyan);
-            AttachToAbove = new QMSingleButton(AttachToBone, 4, 2, "Above", delegate
+            });
+
+            bonepage.AddButton("Above", "Attach above the player", delegate
             {
-                Player playercheck = GetSelectedPlayer();
+                Player playercheck = Attach.cachedselected;
                 if (playercheck.GetVRCPlayer().GetAnimator().isHuman)
                 {
                     if (Attach.Target != null)
@@ -261,72 +274,44 @@ namespace AttachToPlayer
                         Attach.Target = null;
                         Attach.CircularAttachment = false;
                     }
-                    Attach.AbreastAttachment = true;
                     Attach.BodyX = 11;
                     Attach.BodyY = 11;
                     Attach.BodyZ = 11;
                     Attach.PosX = 0f;
                     Attach.PosY = 1f;
                     Attach.PosZ = 0f;
-                    Attach.Target = GetSelectedPlayer();
+                    Attach.Target = Attach.cachedselected;
                     PlayerExtensions.FreezeLocalPlayer(false);
                 }
                 MelonLogger.Msg("the player is not able to be attached to");
-            }, "Attach to a pivot above the player", Color.cyan, Color.cyan);
-            OrbitTarget = new QMSingleButton(TargetNest, 3, 0, "Orbit", delegate
+            });
+            page.AddButton("Orbit", "orbits the selected player", delegate
             {
+                MelonLogger.Msg("orbit activated");
                 if (Attach.Target != null)
                 {
                     Attach.Target = null;
                     Attach.AbreastAttachment = false;
                 }
-
-                Attach.CircularAttachment = true;
                 Attach.PosX = 1f;
                 Attach.PosY = 0f;
                 Attach.PosZ = 1f;
-                Attach.Target = GetSelectedPlayer();
+                Attach.Target = Attach.cachedselected;
                 PlayerExtensions.FreezeLocalPlayer(false);
-            }, "Orbits the targeted player", Color.cyan, Color.cyan);
-        }
-
-        public static QuickMenu GetQuickMenu()
-        {
-            return QuickMenu.prop_QuickMenu_0;
-        }
-
-        public static APIUser GetSelectedAPIUser()
-        {
-            return GetQuickMenu().field_Private_APIUser_0;
+            });
         }
 
         public static Player GetSelectedPlayer()
         {
-            return PlayerExtensions.GetPlayerByID(GetSelectedAPIUser().id);
+            var a = UnityEngine.Object.FindObjectOfType<SelectedUserMenuQM>().field_Private_IUser_0;
+            return PlayerExtensions.GetPlayerByID(a.prop_String_0);
         }
 
         public static IEnumerator WhereDaUI()
         {
-            while (VRCUiManager.prop_VRCUiManager_0 == null) yield return null;
+            while (QuickMenuEx.Instance == null) yield return null;
             AttachGUI();
             yield break;
         }
-
-        public static QMNestedButton TargetNest;
-        public static QMSingleButton AttachToPlayer;
-        public static QMNestedButton AttachToBone;
-        public static QMSingleButton OrbitTarget;
-        public static QMSingleButton AttachToChest;
-        public static QMSingleButton AttachToHips;
-        public static QMSingleButton AttachToLeftLeg;
-        public static QMSingleButton AttachToRightLeg;
-        public static QMSingleButton AttachToLeftArm;
-        public static QMSingleButton AttachToRightArm;
-        public static QMSingleButton AttachToBelow;
-        public static QMSingleButton AttachToAbove;
-        public static QMSingleButton AttachToLeftSide;
-        public static QMSingleButton AttachToRightSide;
-        public static QMSingleButton AttachToLeftHand;
-        public static QMSingleButton AttachToRightHand;
     }
 }
