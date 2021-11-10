@@ -15,7 +15,7 @@ namespace AttachToPlayer
         {
             MelonLogger.Msg("Press Space to stop attaching or your right controller menu button if you are in VR(sorry lefties). This was made by Stellar");
             InitOnPlayerJoinLeavePatch();
-            AttachUI.WhereDaUI().Start();
+            MelonCoroutines.Start(AttachUI.WhereDaUI());
         }
         public static void InitOnPlayerJoinLeavePatch()
         {

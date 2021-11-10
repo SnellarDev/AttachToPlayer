@@ -40,7 +40,6 @@
     <Compile Include="Requi\Managers\ConfigManager.cs" />
     <Compile Include="Requi\Managers\ResourceManager.cs" />
     <Compile Include="Requi\Managers\UiManager.cs" />
-    <Compile Include="Misc.cs" />
     <Compile Include="Requi\ModComponent.cs" />
     <Compile Include="Patch.cs" />
     <Compile Include="PlayerExtensions.cs" />

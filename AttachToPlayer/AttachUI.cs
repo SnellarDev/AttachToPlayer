@@ -17,12 +17,9 @@ namespace AttachToPlayer
 {
     public static class AttachUI
     {
-        public static bool ison;
         private static UiManager uiManager;
-        public static Sprite sprith;
         public static void AttachGUI()
         {
-            GameObject.Find("UserInterface/Canvas_QuickMenu(Clone)/Container/Window/Toggle_SafeMode").gameObject.SetActive(false);
             uiManager = new UiManager("Target");
             uiManager.TargetMenu.AddMenuPage("Utils", "Opens a sub-menu for attaching to players");
             ReMenuPage page = uiManager.TargetMenu.GetMenuPage("Utils");
