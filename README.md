@@ -11,4 +11,4 @@ Click on any user and select Attach Utils, from there you can toggle each button
 The only bugs so far are UI bugs such as when you open the nested button and select someone else it will not close it resulting in an overlap of UI, to fix all you have to do is go back into the nested button and close it.
 
 # UI
-I used Ruby Button API to make the buttons.
+I used Requi's UI to make the buttons.
