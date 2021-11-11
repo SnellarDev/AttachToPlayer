@@ -1,4 +1,5 @@
 ﻿using MelonLoader;
+using System.Collections;
 using System.Linq;
 using System.Reflection;
 using UnhollowerRuntimeLib.XrefScans;
@@ -16,6 +17,7 @@ namespace AttachToPlayer
             MelonLogger.Msg("Press Space to stop attaching or your right controller menu button if you are in VR(sorry lefties). This was made by Stellar");
             InitOnPlayerJoinLeavePatch();
             MelonCoroutines.Start(AttachUI.WhereDaUI());
+            MelonCoroutines.Start(CheckNullPlayer());
         }
         public static void InitOnPlayerJoinLeavePatch()
         {
@@ -47,17 +49,24 @@ namespace AttachToPlayer
             }
             return true;
         }
+        public static IEnumerator CheckNullPlayer()
+        {
+            for (; ; )
+            {
+                try
+                {
+                    if (PlayerExtensions.IsInWorld() && AttachUI.GetSelectedPlayer() != null)
+                    {
+                        cachedselected = AttachUI.GetSelectedPlayer();
+                    }
+                }
+                catch { }
+                yield return new WaitForSeconds(0.1f);
+            }
+        }
 
         public override void OnUpdate()
         {
-            try
-            {
-                if (AttachUI.GetSelectedPlayer() != null)
-                {
-                    cachedselected = AttachUI.GetSelectedPlayer();
-                }
-            }
-            catch { }
             for (int i = 0; i < keycodes.Length; i++) if (Target != null && Input.GetKeyDown(keycodes[i]))
                 {
                     PlayerExtensions.FreezeLocalPlayer(true);
