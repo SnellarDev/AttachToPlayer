@@ -97,33 +97,33 @@ namespace AttachToPlayer
             return player.GetAPIUser().IsOnMobile;
         }
 
-        public static void ToggleBlock(this Player player)
-        {
-            PageUserInfo pageUserInfo = player.GetPageUserInfo();
-            if (!player.IsLocalPlayer())
-            {
-                pageUserInfo.ToggleBlock();
-            }
-        }
+        //public static void ToggleBlock(this Player player)
+        //{
+        //    PageUserInfo pageUserInfo = player.GetPageUserInfo();
+        //    if (!player.IsLocalPlayer())
+        //    {
+        //        pageUserInfo.ToggleBlock();
+        //    }
+        //}
 
-        public static void ToggleMute(this Player player)
-        {
-            PageUserInfo pageUserInfo = player.GetPageUserInfo();
-            if (!player.IsLocalPlayer())
-            {
-                pageUserInfo.ToggleMute();
-            }
-        }
+        //public static void ToggleMute(this Player player)
+        //{
+        //    PageUserInfo pageUserInfo = player.GetPageUserInfo();
+        //    if (!player.IsLocalPlayer())
+        //    {
+        //        pageUserInfo.ToggleMute();
+        //    }
+        //}
 
-        private static PageUserInfo GetPageUserInfo(this Player player)
-        {
-            PageUserInfo component = GameObject.Find("Screens").transform.Find("UserInfo").GetComponent<PageUserInfo>();
-            component.field_Public_APIUser_0 = new APIUser
-            {
-                id = player.GetAPIUser().id
-            };
-            return component;
-        }
+        //private static PageUserInfo GetPageUserInfo(this Player player)
+        //{
+        //    PageUserInfo component = GameObject.Find("Screens").transform.Find("UserInfo").GetComponent<PageUserInfo>();
+        //    component.field_Public_APIUser_0 = new APIUser
+        //    {
+        //        id = player.GetAPIUser().id
+        //    };
+        //    return component;
+        //}
 
         public static void SendVRCEvent(VRC_EventHandler.VrcEvent vrcEvent, VRC_EventHandler.VrcBroadcastType type, GameObject instagator)
         {

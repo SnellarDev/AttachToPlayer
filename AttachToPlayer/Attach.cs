@@ -1,4 +1,6 @@
-﻿using MelonLoader;
+﻿using HarmonyLib;
+using MelonLoader;
+using System;
 using System.Collections;
 using System.Linq;
 using System.Reflection;
@@ -12,41 +14,39 @@ namespace AttachToPlayer
     public class Attach : MelonMod
     {
         public static VRC.Player cachedselected;
+        public static HarmonyLib.Harmony Instance = new HarmonyLib.Harmony("Patches");
         public override void OnApplicationStart()
         {
             MelonLogger.Msg("Press Space to stop attaching or your right controller menu button if you are in VR(sorry lefties). This was made by Stellar");
-            InitOnPlayerJoinLeavePatch();
+            InitPatches();
             MelonCoroutines.Start(AttachUI.WhereDaUI());
             MelonCoroutines.Start(CheckNullPlayer());
         }
-        public static void InitOnPlayerJoinLeavePatch()
+        private static HarmonyMethod GetPatch(string name)
         {
-            try
-            {
-                MethodInfo[] array = (from m in typeof(NetworkManager).GetMethods()
-                                      where m.Name.Contains("Method_Public_Void_Player_") && !m.Name.Contains("PDM")
-                                      select m).ToArray<MethodInfo>();
-                new Patch(typeof(NetworkManager), typeof(Attach), array[0].Name, "OnPlayerLeft", BindingFlags.Static, BindingFlags.NonPublic);
-                new Patch(typeof(NetworkManager), typeof(Attach), array[1].Name, "OnPlayerJoined", BindingFlags.Static, BindingFlags.NonPublic);
-            }
-            catch { }
+            return new HarmonyMethod(typeof(Attach).GetMethod(name, BindingFlags.Static | BindingFlags.NonPublic));
+        }
+        private static void InitPatches()
+        {
+            MethodInfo[] array = (from m in typeof(NetworkManager).GetMethods()
+                                  where m.Name.Contains("Method_Public_Void_Player_") && !m.Name.Contains("PDM")
+                                  select m).ToArray<MethodInfo>();
+            try { Instance.Patch(AccessTools.Method(typeof(NetworkManager), array[1].Name, null, null), GetPatch("OnPlayerLeft")); } catch (Exception e) { MelonLogger.Error($"Error Patching OnPlayerLeft => {e.Message}"); }
         }
 
         private static bool OnPlayerLeft(ref VRC.Player __0)
         {
             try
             {
-             if (Target.GetAPIUser().id == __0.GetAPIUser().id)
-             {
-                 Target = null;
-                 AbreastAttachment = false;
-                 CircularAttachment = false;
-                 PlayerExtensions.FreezeLocalPlayer(true);
-             }
+                if (Target.GetAPIUser().id == __0.GetAPIUser().id)
+                {
+                   AbreastAttachment = false;
+                   CircularAttachment = false;
+                   PlayerExtensions.FreezeLocalPlayer(true);
+                   Target = null;
+                }
             }
-            catch
-            {
-            }
+            catch { }
             return true;
         }
         public static IEnumerator CheckNullPlayer()
