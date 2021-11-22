@@ -17,38 +17,6 @@ namespace AttachToPlayer
 {
     public static class AttachUI
     {
-        private static UiManager uiManager;
-        public static void BoneAttachValues(int BodyX, int BodyY, int BodyZ, bool isabreast = false, float PosX = 0, float PosY = 0, float PosZ = 0)
-        {
-            Player playercheck = Attach.cachedselected;
-            if (playercheck.GetVRCPlayer().GetAnimator().isHuman)
-            {
-                if (Attach.Target != null)
-                {
-                    if(!isabreast)
-                    {
-                        Attach.Target = null;
-                        Attach.AbreastAttachment = false;
-                        Attach.CircularAttachment = false;
-                    }
-                    if(isabreast)
-                    {
-                        Attach.Target = null;
-                        Attach.CircularAttachment = false;
-                    }
-                }
-                Attach.BodyX = BodyX;
-                Attach.BodyY = BodyY;
-                Attach.BodyZ = BodyZ;
-                Attach.PosX = PosX;
-                Attach.PosY = PosY;
-                Attach.PosZ = PosZ;
-                Attach.Target = Attach.cachedselected;
-                PlayerExtensions.FreezeLocalPlayer(false);
-            }
-            else
-            MelonLogger.Msg("the player is not able to be attached to");
-        }
         public static void AttachGUI()
         {
             uiManager = new UiManager("Target");
@@ -57,70 +25,97 @@ namespace AttachToPlayer
 
             page.AddButton("Attach To Player", "Attaches your player to the other player's head", delegate
             {
-                BoneAttachValues(0, 0, 0);
+                BoneAttachValues(new Vector3(0, 0, 0));
             });
 
             page.AddMenuPage("Bone Attach", "Select the player's bones to attach to");
             ReMenuPage bonepage = page.GetMenuPage("Bone Attach");
+
             bonepage.AddButton("Chest", "Attaches your player to the other player's chest", delegate
             {
-                BoneAttachValues(1, 1, 1);
+                BoneAttachValues(new Vector3(1, 1, 1));
             });
 
             bonepage.AddButton("Right Hand", "Attach to the right hand of the player", delegate
             {
-                BoneAttachValues(2, 2, 2);
+                BoneAttachValues(new Vector3(2, 2, 2));
             });
 
             bonepage.AddButton("Left Hand", "Attach to the left hand of the player", delegate
             {
-                BoneAttachValues(3, 3, 3);
+                BoneAttachValues(new Vector3(3, 3, 3));
             });
 
             bonepage.AddButton("Hips", "Attach to the hips of the player", delegate
             {
-                BoneAttachValues(4, 4, 4);
+                BoneAttachValues(new Vector3(4, 4, 4));
             });
 
             bonepage.AddButton("Left Leg", "Attach to the left leg of the player", delegate
             {
-                BoneAttachValues(5, 5, 5);
+                BoneAttachValues(new Vector3(5, 5, 5));
             });
 
             bonepage.AddButton("Right Leg", "Attach to the right leg of the player", delegate
             {
-                BoneAttachValues(6, 6, 6);
+                BoneAttachValues(new Vector3(6, 6, 6));
             });
 
             bonepage.AddButton("Right Arm", "Attach to the right arm of the player", delegate
             {
-                BoneAttachValues(7, 7, 7);
+                BoneAttachValues(new Vector3(7, 7, 7));
             });
 
             bonepage.AddButton("Left Arm", "Attach to the left arm of the player", delegate
             {
-                BoneAttachValues(8, 8, 8);
+                BoneAttachValues(new Vector3(8, 8, 8));
             });
 
             bonepage.AddButton("Left Side", "Attach to the left side of the player", delegate
             {
-                BoneAttachValues(9, 9, 9, true, 0.5f, 0f, 0f);
+                BoneAttachValues(new Vector3(9, 9, 9), new Vector3(0.5f, 0f, 0f), true);
             });
 
             bonepage.AddButton("Right Side", "Attach to the right side of the player", delegate
             {
-                BoneAttachValues(10, 10, 10, true, -0.5f, 0f, 0f);
+                BoneAttachValues(new Vector3(10, 10, 10), new Vector3(-0.5f, 0f, 0f), true);
             });
+        }
 
-            //bonepage.AddButton("Below", "Attach below the player", delegate
-            //{
-            //    BoneAttachValues(11, 11, 11, true, 0f, -2f, 0f);
-            //});
-
-            //bonepage.AddButton("Above", "Attach above the player", delegate
-            //{
-            //    BoneAttachValues(11, 11, 11, true, 0f, 1f, 0f);
-            //});
+        public static void BoneAttachValues(Vector3 bonevec, Vector3 posvec = default(Vector3), bool isabreast = false)
+        {
+            try
+            {
+                Player playercheck = Attach.cachedselected;
+                if (playercheck.GetVRCPlayer().GetAnimator().isHuman)
+                {
+                    if (Attach.Target != null)
+                    {
+                        if (!isabreast)
+                        {
+                            Attach.Target = null;
+                            Attach.AbreastAttachment = false;
+                            Attach.CircularAttachment = false;
+                        }
+                        if (isabreast)
+                        {
+                            Attach.Target = null;
+                            Attach.CircularAttachment = false;
+                        }
+                    }
+                    Attach.BodyVector3.x = bonevec.x;
+                    Attach.BodyVector3.y = bonevec.y;
+                    Attach.BodyVector3.z = bonevec.z;
+                    Attach.PosVector3.x = posvec.x;
+                    Attach.PosVector3.y = posvec.y;
+                    Attach.PosVector3.z = posvec.z;
+                    Attach.Target = Attach.cachedselected;
+                    PlayerExtensions.FreezeLocalPlayer(false);
+                }
+                else
+                    MelonLogger.Error("The player is not able to be attached to");
+            }
+            catch { }
         }
 
         public static Player GetSelectedPlayer()
@@ -135,5 +130,8 @@ namespace AttachToPlayer
             AttachGUI();
             yield break;
         }
+
+        private static UiManager uiManager;
+
     }
 }
