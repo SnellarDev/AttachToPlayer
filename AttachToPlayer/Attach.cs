@@ -13,24 +13,18 @@ namespace AttachToPlayer
 {
     public class Attach : MelonMod
     {
-        public static VRC.Player cachedselected;
-        public static HarmonyLib.Harmony Instance = new HarmonyLib.Harmony("Patches");
         public override void OnApplicationStart()
         {
-            MelonLogger.Msg("Press Space to stop attaching or your right controller menu button if you are in VR(sorry lefties). This was made by Stellar");
+            MelonLogger.Msg("Press Space to stop attaching or your right controller menu button if you are in VR");
             InitPatches();
             MelonCoroutines.Start(AttachUI.WhereDaUI());
             MelonCoroutines.Start(CheckNullPlayer());
-        }
-        private static HarmonyMethod GetPatch(string name)
-        {
-            return new HarmonyMethod(typeof(Attach).GetMethod(name, BindingFlags.Static | BindingFlags.NonPublic));
         }
         private static void InitPatches()
         {
             MethodInfo[] array = (from m in typeof(NetworkManager).GetMethods()
                                   where m.Name.Contains("Method_Public_Void_Player_") && !m.Name.Contains("PDM")
-                                  select m).ToArray<MethodInfo>();
+                                  select m).ToArray();
             try { Instance.Patch(AccessTools.Method(typeof(NetworkManager), array[1].Name, null, null), GetPatch("OnPlayerLeft")); } catch (Exception e) { MelonLogger.Error($"Error Patching OnPlayerLeft => {e.Message}"); }
         }
 
@@ -78,17 +72,23 @@ namespace AttachToPlayer
             {
                 PlayerExtensions.LocalPlayer.transform.position = new Vector3(Target.GetVRCPlayer().GetAnimator().GetBoneTransform(boneparts[BodyX]).position.x, Target.GetVRCPlayer().GetAnimator().GetBoneTransform(boneparts[BodyY]).position.y, Target.GetVRCPlayer().GetAnimator().GetBoneTransform(boneparts[BodyZ]).position.z);
             }
-            if (Target != null && PlayerExtensions.LocalVRCPlayer != null && AbreastAttachment && !CircularAttachment)
-            {
-                PlayerExtensions.LocalPlayer.transform.position = new Vector3(Target.GetVRCPlayer().GetAnimator().GetBoneTransform(boneparts[BodyX]).position.x + PosX, Target.GetVRCPlayer().GetAnimator().GetBoneTransform(boneparts[BodyY]).position.y + PosY, Target.GetVRCPlayer().GetAnimator().GetBoneTransform(boneparts[BodyZ]).position.z + PosZ);
-            }
-            if (Target != null && PlayerExtensions.LocalVRCPlayer != null && !AbreastAttachment && CircularAttachment)
-            {
-                outset += Time.deltaTime * circularspeed;
-                PlayerExtensions.LocalPlayer.transform.position = new Vector3(Target.transform.position.x + PosX * (float)System.Math.Cos((double)outset), Target.transform.position.y, Target.transform.position.z + PosZ * (float)System.Math.Sin((double)outset));
-            }
+            //if (Target != null && PlayerExtensions.LocalVRCPlayer != null && AbreastAttachment)
+            //{
+            //    PlayerExtensions.LocalPlayer.transform.position = new Vector3(Target.GetVRCPlayer().GetAnimator().GetBoneTransform(boneparts[BodyX]).position.x + PosX, PosY, Target.GetVRCPlayer().GetAnimator().GetBoneTransform(boneparts[BodyZ]).position.z + PosZ);
+            //}
+            //if (Target != null && PlayerExtensions.LocalVRCPlayer != null && !AbreastAttachment && CircularAttachment)
+            //{
+            //    outset += Time.deltaTime * circularspeed;
+            //    PlayerExtensions.LocalPlayer.transform.position = new Vector3(Target.transform.position.x + PosX * (float)System.Math.Cos((double)outset), Target.transform.position.y, Target.transform.position.z + PosZ * (float)System.Math.Sin((double)outset));
+            //}
+        }
+        private static HarmonyMethod GetPatch(string name)
+        {
+            return new HarmonyMethod(typeof(Attach).GetMethod(name, BindingFlags.Static | BindingFlags.NonPublic));
         }
 
+        public static VRC.Player cachedselected;
+        public static HarmonyLib.Harmony Instance = new HarmonyLib.Harmony("Patches");
         public static VRC.Player Target;
         public static bool AbreastAttachment;
         public static bool CircularAttachment;
@@ -100,7 +100,7 @@ namespace AttachToPlayer
         public static int BodyX;
         public static int BodyY;
         public static int BodyZ;
-        private KeyCode[] keycodes = new KeyCode[] { KeyCode.Space, KeyCode.JoystickButton15 };
+        private readonly KeyCode[] keycodes = new KeyCode[] { KeyCode.Space, KeyCode.JoystickButton15 };
         public HumanBodyBones[] boneparts = new HumanBodyBones[] { HumanBodyBones.Head, HumanBodyBones.Chest, HumanBodyBones.LeftHand, HumanBodyBones.RightHand, HumanBodyBones.Hips, HumanBodyBones.LeftLowerLeg, HumanBodyBones.RightLowerLeg, HumanBodyBones.RightLowerArm, HumanBodyBones.LeftLowerArm, HumanBodyBones.LeftToes, HumanBodyBones.RightToes, HumanBodyBones.Spine };
     }
 }
